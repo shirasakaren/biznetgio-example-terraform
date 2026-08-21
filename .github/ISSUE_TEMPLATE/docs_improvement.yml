@@ -1,0 +1,38 @@
+name: Docs improvement
+description: Something in this repo's comments or READMEs is wrong, unclear, or missing
+title: "docs: "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Docs bugs are real bugs. The whole point of this repo is teaching. Bug docs itu bug beneran. Inti repo ini kan ngajarin.
+  - type: input
+    id: page
+    attributes:
+      label: Where
+      description: File path or README section that needs work, e.g. gpu/main.tf or the root README table
+      placeholder: gpu/main.tf
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong or unclear
+      description: Quote the exact line or section if you can
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested fix
+      description: How would you rewrite it? A draft is perfect, a rough idea is fine
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else
+      description: Links to the docs site pages involved, if any
+    validations:
+      required: false

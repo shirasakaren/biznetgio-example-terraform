@@ -1,0 +1,37 @@
+name: Feature request
+description: Suggest a new example, a new pattern, or an improvement
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea! Explain the problem first, then the proposal. Makasih buat idenya! Jelasin masalahnya dulu, baru proposalnya.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do today that this repo does not show you how to do?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What should the new or changed example look like? Which folder, which resources?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Workarounds you already tried or considered
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else
+      description: Links, screenshots, or anything else that helps
+    validations:
+      required: false

@@ -1,0 +1,65 @@
+name: Bug report
+description: Something here is broken, or behaves differently than the docs say
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Fill in as much as you can. Makasih udah lapor bug! Isi sebanyak yang bisa.
+  - type: input
+    id: example
+    attributes:
+      label: Which example
+      description: Folder this happened in, e.g. gpu/ or neolite-pro/
+      placeholder: gpu/
+    validations:
+      required: true
+  - type: input
+    id: terraform-version
+    attributes:
+      label: Terraform version
+      description: Output of `terraform version`
+      placeholder: Terraform v1.9.0
+    validations:
+      required: true
+  - type: input
+    id: provider-version
+    attributes:
+      label: Provider version
+      description: The version pinned in the folder's versions.tf, e.g. 0.1.0
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands you ran, in order
+      value: |
+        1. terraform init
+        2. terraform plan
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What you expected to happen
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened, paste the full error output
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else
+      description: Account region, portal behavior, or anything else that could help
+    validations:
+      required: false
