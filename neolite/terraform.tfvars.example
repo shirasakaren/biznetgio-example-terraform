@@ -6,5 +6,5 @@
 # beneran. terraform.tfvars di-gitignore, file .example ini enggak -
 # jangan pernah taro secret beneran di file ini.
 
-ssh_and_console_user = "admin"
+ssh_and_console_user = "adminuser"
 console_password     = "ChangeMe123!"

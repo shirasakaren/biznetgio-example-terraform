@@ -5,7 +5,7 @@
 
 variable "ssh_and_console_user" {
   type    = string
-  default = "admin"
+  default = "adminuser"
 }
 
 variable "console_password" {

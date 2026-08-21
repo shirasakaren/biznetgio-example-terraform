@@ -4,7 +4,7 @@
 # 6-32 karakter, cuma huruf/angka/dash/titik.
 variable "ssh_and_console_user" {
   type    = string
-  default = "admin"
+  default = "adminuser"
 }
 
 # English: Console/SSH password. No default on purpose - never hardcode a
