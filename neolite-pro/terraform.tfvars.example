@@ -1,0 +1,8 @@
+# English: Copy this to terraform.tfvars and fill in a real password.
+# terraform.tfvars is gitignored, this .example file is not.
+#
+# Indonesia: Copy ini jadi terraform.tfvars terus isi password beneran.
+# terraform.tfvars di-gitignore, file .example ini enggak.
+
+ssh_and_console_user = "admin"
+console_password     = "ChangeMe123!"

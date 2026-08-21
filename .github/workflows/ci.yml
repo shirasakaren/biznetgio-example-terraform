@@ -1,0 +1,112 @@
+# English: Manual-only pipeline (workflow_dispatch) - it never runs on
+# push or on a schedule, on purpose. `validate` is the default action and
+# needs no credentials at all, since terraform validate is a static
+# check that never talks to the Biznet GIO API. `plan`/`apply`/`destroy`
+# need a BIZNETGIO_API_KEY secret configured on this repo, and
+# apply/destroy place REAL orders - pick them deliberately, never by
+# accident.
+#
+# Indonesia: Pipeline manual doang (workflow_dispatch) - sengaja gak
+# pernah jalan pas push atau terjadwal. `validate` itu action default dan
+# gak butuh credential sama sekali, soalnya terraform validate itu cek
+# statis yang gak pernah ngomong ke API Biznet GIO. `plan`/`apply`/
+# `destroy` butuh secret BIZNETGIO_API_KEY dikonfigurasi di repo ini, dan
+# apply/destroy bikin order BENERAN - pilih itu dengan sengaja, jangan
+# gak sengaja.
+name: ci
+
+on:
+  workflow_dispatch:
+    inputs:
+      example:
+        description: "Example folder to run, or 'all'"
+        type: choice
+        default: "all"
+        options:
+          - all
+          - neolite
+          - neolite-pro
+          - baremetal
+          - gpu
+          - object-storage
+          - complete
+      action:
+        description: "validate needs no credentials. plan/apply/destroy need BIZNETGIO_API_KEY, and apply/destroy place REAL orders."
+        type: choice
+        default: "validate"
+        options:
+          - validate
+          - plan
+          - apply
+          - destroy
+
+permissions:
+  contents: read
+
+jobs:
+  # English: Turn the "all" choice into an actual list of folders for the
+  # matrix below, or just pass through a single folder.
+  # Indonesia: Ubah pilihan "all" jadi list folder beneran buat matrix di
+  # bawah, atau lewatin aja satu folder doang.
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.list.outputs.matrix }}
+    steps:
+      - id: list
+        run: |
+          if [ "${{ inputs.example }}" = "all" ]; then
+            echo 'matrix=["neolite","neolite-pro","baremetal","gpu","object-storage","complete"]' >> "$GITHUB_OUTPUT"
+          else
+            echo 'matrix=["${{ inputs.example }}"]' >> "$GITHUB_OUTPUT"
+          fi
+
+  run:
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        example: ${{ fromJson(needs.discover.outputs.matrix) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.example }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: terraform fmt -check
+        run: terraform fmt -check
+
+      - name: terraform init
+        run: terraform init
+
+      - name: terraform validate
+        run: terraform validate
+
+      # English: Everything past this point needs a real API token and
+      # only runs if you deliberately picked plan/apply/destroy above.
+      # Indonesia: Semua setelah sini butuh API token beneran dan cuma
+      # jalan kalau lu emang sengaja pilih plan/apply/destroy di atas.
+
+      - name: terraform plan
+        if: inputs.action == 'plan' || inputs.action == 'apply' || inputs.action == 'destroy'
+        run: terraform plan ${{ inputs.action == 'destroy' && '-destroy' || '' }}
+        env:
+          BIZNETGIO_API_KEY: ${{ secrets.BIZNETGIO_API_KEY }}
+          TF_VAR_console_password: ${{ secrets.EXAMPLE_CONSOLE_PASSWORD }}
+
+      - name: terraform apply
+        if: inputs.action == 'apply'
+        run: terraform apply -auto-approve
+        env:
+          BIZNETGIO_API_KEY: ${{ secrets.BIZNETGIO_API_KEY }}
+          TF_VAR_console_password: ${{ secrets.EXAMPLE_CONSOLE_PASSWORD }}
+
+      - name: terraform destroy
+        if: inputs.action == 'destroy'
+        run: terraform destroy -auto-approve
+        env:
+          BIZNETGIO_API_KEY: ${{ secrets.BIZNETGIO_API_KEY }}
+          TF_VAR_console_password: ${{ secrets.EXAMPLE_CONSOLE_PASSWORD }}
